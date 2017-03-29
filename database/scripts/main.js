@@ -108,10 +108,12 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
             '<div class="starred material-icons">star</div>' +
             '<div class="star-count">0</div>' +
           '</span>' +
-          '<div class="">login</div>'+
-          '<div class="loginname"></div> ' +
-          '<div class="">password</div>' +
-          '<div class="text"></div>' +
+          '<div class="logindetails">' +
+            '<div class="">login</div>'+
+            '<div class="loginname"></div> ' +
+            '<div class="">password</div>' +
+            '<div class="text"></div>' +
+          '</div>' + 
           '<div class="comments-container"></div>' +
           '<form class="add-comment" action="#">' +
             '<div class="mdl-textfield mdl-js-textfield">' +

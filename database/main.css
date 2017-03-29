@@ -37,7 +37,7 @@ a {
 }
 
 h3 {
-    background: url('firebase-logo.png') no-repeat;
+    background: url('http://vignette3.wikia.nocookie.net/thelastofus/images/9/96/Lock.png/revision/latest?cb=20150811200030') no-repeat;
     background-size: 40px;
     padding-left: 50px;
     background-position-y: -2px;
@@ -45,6 +45,7 @@ h3 {
 
 .mdl-textfield {
     width: 100%;
+    
 }
 
 
@@ -70,10 +71,14 @@ h3 {
 
 .mdl-textfield__label:after {
     background-color: #0288D1;
+    
+    
 }
 
 .mdl-textfield--floating-label.is-focused .mdl-textfield__label {
     color: #0288D1;
+    
+   
 }
 
 
@@ -148,12 +153,12 @@ h3 {
 
 #sign-in-button {
     margin-left: 10px;
-    color: inherit;
+    color: #ffffff;
 }
 
 #sign-out-button {
     margin: 10px;
-    color: inherit;
+    color: #ffffff;
 }
 
 .mdl-button .material-icons {
@@ -274,12 +279,13 @@ h3 {
 
 .comments-container .username {
     width: auto;
+    
 }
 
 .comments-container .loginname {
     display: inline-block;
     vertical-align: top;
-    padding-left: 10px;
+    padding: 10px;
     color: grey;
     line-height: 25px;
 }
@@ -294,6 +300,7 @@ h3 {
 
 .comments-container .username {
     line-height: 25px;
+    
 }
 
 
@@ -330,13 +337,15 @@ h3 {
 }
 .post .loginname {
     padding: 0 10px;
-    color: grey;
+    color: grey
 }
 
 .post .comments-container .text {
+   
     margin-left: 5px;
     color: #444;
     transition: all 0.2s;
+     padding: 50px;
 }
 
 .post .add-comment {
@@ -347,6 +356,7 @@ h3 {
 
 .post .add-comment.mdl-textfield {
     width: 100%;
+  
 }
 
 .post .star {
@@ -386,4 +396,11 @@ h3 {
     align-items: center;
     color: white;
     flex-direction: column;
+}
+.primary{
+    background-color: #303F9F;
+
+}
+.logindetails{
+    padding:10px;
 }
