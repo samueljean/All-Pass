@@ -44,7 +44,7 @@ function writeNewPost(uid, username, picture, title, body, loginname) {
     uid: uid,
     body: body,
     title: title,
-    loginname:loginname ,
+    loginname: loginname,
     starCount: 0,
     authorPic: picture
   };
@@ -71,7 +71,8 @@ function toggleStar(postRef, uid) {
       if (post.stars && post.stars[uid]) {
         post.starCount--;
         post.stars[uid] = null;
-      } else {
+      }
+      else {
         post.starCount++;
         if (!post.stars) {
           post.stars = {};
@@ -91,59 +92,52 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
   var uid = firebase.auth().currentUser.uid;
 
   var html =
-      '<div class="post post-' + postId + ' mdl-cell mdl-cell--12-col ' +
-                  'mdl-cell--6-col-tablet mdl-cell--4-col-desktop mdl-grid mdl-grid--no-spacing">' +
-        '<div class="mdl-card mdl-shadow--2dp">' +
-          '<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">' +
-            '<h4 class="mdl-card__title-text"></h4>' +
-          '</div>' +
-          '<div class="header">' +
-            '<div>' +
-              '<div class="avatar"></div>' +
-              '<div class="username mdl-color-text--black"></div>' +
-            '</div>' +
-          '</div>' +
-          '<span class="star">' +
-            '<div class="not-starred material-icons">star_border</div>' +
-            '<div class="starred material-icons">star</div>' +
-            '<div class="star-count">0</div>' +
-          '</span>' +
-          '<div class="logindetails">' +
-            '<div class="">login</div>'+
-            '<div class="loginname"></div> ' +
-            '<div class="">password</div>' +
-            '<div class="text"></div>' +
-          '</div>' + 
-          '<div class="comments-container"></div>' +
-          '<form class="add-comment" action="#">' +
-            '<div class="mdl-textfield mdl-js-textfield">' +
-              '<input class="mdl-textfield__input new-comment" type="text">' +
-              '<label class="mdl-textfield__label">Comment...</label>' +
-            '</div>' +
-          '</form>' +
-        '</div>' +
-      '</div>';
+    '<div class="post post-' + postId + ' mdl-cell mdl-cell--12-col ' +
+    'mdl-cell--6-col-tablet mdl-cell--4-col-desktop mdl-grid mdl-grid--no-spacing">' +
+    '<div class="mdl-card mdl-shadow--2dp">' +
+    '<div class="mdl-card__title mdl-color--light-blue-600 mdl-color-text--white">' +
+    '<h4 class="mdl-card__title-text"></h4>' +
+    '</div>' +
+    '<div class="header">' +
+    '<div>' +
+    '<div class="avatar"></div>' +
+    '<div class="username mdl-color-text--black"></div>' +
+    '</div>' +
+    '</div>' +
+    '<span class="star">' +
+    '<div class="not-starred material-icons">star_border</div>' +
+    '<div class="starred material-icons">star</div>' +
+    '<div class="star-count">0</div>' +
+    '</span>' +
+    '<div class="logindetails">' +
+    '<div class="">login</div>' +
+    '<div class="loginname"></div> ' +
+    '<div class="">password <button type="button" class="btn btn-default btn-sm eyeball"> <span class="glyphicon glyphicon-eye-open"></span> </button></div>' +
+    '<div class="text"></div>' +
+    '<div class="hidden-pass"></div>' +
+    '</div>' +
+    '<div class="comments-container"></div>' +
+    '</div>' +
+    '</div>';
 
   // Create the DOM element from the HTML.
   var div = document.createElement('div');
   div.innerHTML = html;
   var postElement = div.firstChild;
-  if (componentHandler) {
-    componentHandler.upgradeElements(postElement.getElementsByClassName('mdl-textfield')[0]);
-  }
 
-  var addCommentForm = postElement.getElementsByClassName('add-comment')[0];
+
   var commentInput = postElement.getElementsByClassName('new-comment')[0];
   var star = postElement.getElementsByClassName('starred')[0];
   var unStar = postElement.getElementsByClassName('not-starred')[0];
 
   // Set values.
-  postElement.getElementsByClassName('text')[0].innerText = text;
-  postElement.getElementsByClassName('loginname')[0].innerText = loginname ;
-  postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = title;
+  postElement.getElementsByClassName('text')[0].innerText = text; //This is the password
+  postElement.getElementsByClassName("hidden-pass")[0].innerText = MaskPass(text);
+  postElement.getElementsByClassName('loginname')[0].innerText = loginname;
+  postElement.getElementsByClassName('mdl-card__title-text')[0].innerHTML = '<a href="' + addhttp(title) + '" target="_blank">' + title + '</a>';
   postElement.getElementsByClassName('username')[0].innerText = author || 'Anonymous';
   postElement.getElementsByClassName('avatar')[0].style.backgroundImage = 'url("' +
-      (authorPic || './silhouette.jpg') + '")';
+    (authorPic || './silhouette.jpg') + '")';
 
   // Listen for comments.
   // [START child_event_listener_recycler]
@@ -180,13 +174,6 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
   listeningFirebaseRefs.push(starCountRef);
   listeningFirebaseRefs.push(starredStatusRef);
 
-  // Create new comment.
-  addCommentForm.onsubmit = function(e) {
-    e.preventDefault();
-    createNewComment(postId, firebase.auth().currentUser.displayName, uid, commentInput.value);
-    commentInput.value = '';
-    commentInput.parentElement.MaterialTextfield.boundUpdateClassesHandler();
-  };
 
   // Bind starring action.
   var onStarClicked = function() {
@@ -219,7 +206,8 @@ function updateStarredByCurrentUser(postElement, starred) {
   if (starred) {
     postElement.getElementsByClassName('starred')[0].style.display = 'inline-block';
     postElement.getElementsByClassName('not-starred')[0].style.display = 'none';
-  } else {
+  }
+  else {
     postElement.getElementsByClassName('starred')[0].style.display = 'none';
     postElement.getElementsByClassName('not-starred')[0].style.display = 'inline-block';
   }
@@ -281,21 +269,21 @@ function startDatabaseQueries() {
       var author = data.val().author || 'Anonymous';
       var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
       containerElement.insertBefore(
-          createPostElement(data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic, data.val().loginname),
-          containerElement.firstChild);
+        createPostElement(data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic, data.val().loginname),
+        containerElement.firstChild);
     });
-    postsRef.on('child_changed', function(data) {	
-		var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
-		var postElement = containerElement.getElementsByClassName('post-' + data.key)[0];
-		postElement.getElementsByClassName('mdl-card__title-text')[0].innerText = data.val().title;
-		postElement.getElementsByClassName('username')[0].innerText = data.val().author;
-		postElement.getElementsByClassName('text')[0].innerText = data.val().body;
-		postElement.getElementsByClassName('star-count')[0].innerText = data.val().starCount;
+    postsRef.on('child_changed', function(data) {
+      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      var postElement = containerElement.getElementsByClassName('post-' + data.key)[0];
+      postElement.getElementsByClassName('mdl-card__title-text')[0].innerHTML = '<a href="' + addhttp(data.val().title) + '" target="_blank">' + data.val().title + '</a>';
+      postElement.getElementsByClassName('username')[0].innerText = data.val().author;
+      postElement.getElementsByClassName('text')[0].innerText = data.val().body;
+      postElement.getElementsByClassName('star-count')[0].innerText = data.val().starCount;
     });
     postsRef.on('child_removed', function(data) {
-		var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
-		var post = containerElement.getElementsByClassName('post-' + data.key)[0];
-	    post.parentElement.removeChild(post);
+      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      var post = containerElement.getElementsByClassName('post-' + data.key)[0];
+      post.parentElement.removeChild(post);
     });
   };
 
@@ -318,7 +306,7 @@ function writeUserData(userId, name, email, imageUrl) {
   firebase.database().ref('users/' + userId).set({
     username: name,
     email: email,
-    profile_picture : imageUrl
+    profile_picture: imageUrl
   });
 }
 // [END basic_write]
@@ -360,7 +348,8 @@ function onAuthStateChanged(user) {
     splashPage.style.display = 'none';
     writeUserData(user.uid, user.displayName, user.email, user.photoURL);
     startDatabaseQueries();
-  } else {
+  }
+  else {
     // Set currentUID to null.
     currentUID = null;
     // Display the splash page where you can sign-in.
@@ -378,8 +367,8 @@ function newPostForCurrentUser(title, text, login) {
     var username = snapshot.val().username;
     // [START_EXCLUDE]
     return writeNewPost(firebase.auth().currentUser.uid, username,
-        firebase.auth().currentUser.photoURL,
-        title, text, login);
+      firebase.auth().currentUser.photoURL,
+      title, text, login);
     // [END_EXCLUDE]
   });
   // [END single_value_read]
@@ -393,7 +382,7 @@ function showSection(sectionElement, buttonElement) {
   userPostsSection.style.display = 'none';
   topUserPostsSection.style.display = 'none';
   addPost.style.display = 'none';
-  
+
   myPostsMenuButton.classList.remove('is-active');
   myTopPostsMenuButton.classList.remove('is-active');
 
@@ -450,5 +439,21 @@ window.addEventListener('load', function() {
     messageInput.value = '';
     titleInput.value = '';
   };
-  
+
 }, false);
+// http://stackoverflow.com/questions/11300906/check-if-a-string-starts-with-http-using-javascript
+//checks url if have http, if not adds it 
+function addhttp(url) {
+  if (!/^(f|ht)tps?:\/\//i.test(url)) {
+    url = "http://" + url;
+  }
+  return url;
+}
+
+function MaskPass(password) {
+  var text= "";
+  for ( var i = 0; i < password.length; i++) {
+    text += "*";
+  }
+  return text;
+}

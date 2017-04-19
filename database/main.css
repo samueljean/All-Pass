@@ -86,6 +86,7 @@ h3 {
 
 .logo {
     font-family: 'Amaranth', sans-serif;
+    font-size: 32px !important;
 }
 
 .logo .material-icons {
@@ -403,4 +404,23 @@ h3 {
 }
 .logindetails{
     padding:10px;
+}
+.navbar-color{
+    background-color: #8603e5;
+}
+a{
+    color:white;
+}
+eyeball{
+    border:none;
+    padding:0px;
+    background:none;
+}
+.post .hidden-pass{
+    padding: 0 10px;
+    color: grey;
+}
+.post .show-pass{
+    padding: 0 10px;
+    color: grey;
 }
