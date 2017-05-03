@@ -335,6 +335,7 @@ h3 {
 .post .text {
     padding: 0 10px;
     color: grey;
+    display:none;
 }
 .post .loginname {
     padding: 0 10px;

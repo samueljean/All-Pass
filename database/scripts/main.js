@@ -25,12 +25,12 @@ var signOutButton = document.getElementById('sign-out-button');
 var splashPage = document.getElementById('page-splash');
 var addPost = document.getElementById('add-post');
 var addButton = document.getElementById('add');
-var recentPostsSection = document.getElementById('recent-posts-list');
+//var recentPostsSection = document.getElementById('recent-posts-list');
 var userPostsSection = document.getElementById('user-posts-list');
-var topUserPostsSection = document.getElementById('top-user-posts-list');
+//var topUserPostsSection = document.getElementById('top-user-posts-list');
 var recentMenuButton = document.getElementById('menu-recent');
 var myPostsMenuButton = document.getElementById('menu-my-posts');
-var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
+//var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
 var listeningFirebaseRefs = [];
 
 /**
@@ -102,6 +102,7 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
     '<div>' +
     '<div class="avatar"></div>' +
     '<div class="username mdl-color-text--black"></div>' +
+    '<button type="botton" class="btn btn-default btn-sm eyeball"> </button>' +
     '</div>' +
     '</div>' +
     '<span class="star">' +
@@ -112,9 +113,9 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
     '<div class="logindetails">' +
     '<div class="">login</div>' +
     '<div class="loginname"></div> ' +
-    '<div class="">password <button type="button" class="btn btn-default btn-sm eyeball"> <span class="glyphicon glyphicon-eye-open"></span> </button></div>' +
-    '<div class="text"></div>' +
-    '<div class="hidden-pass"></div>' +
+    '<div class="">password <button type="button" class="btn btn-default btn-sm eyeball" onclick="showhidepass('+"'"+postId+"'"+')"> <span class="glyphicon glyphicon-eye-open"></span> </button></div>' +
+    '<div class="text" id="showpass-' + postId + '"></div>' +
+    '<div class="hidden-pass" id="hidepass-' + postId + '"></div>' +
     '</div>' +
     '<div class="comments-container"></div>' +
     '</div>' +
@@ -257,10 +258,10 @@ function deleteComment(postElement, id) {
 function startDatabaseQueries() {
   // [START my_top_posts_query]
   var myUserId = firebase.auth().currentUser.uid;
-  var topUserPostsRef = firebase.database().ref('user-posts/' + myUserId).orderByChild('starCount');
+ // var topUserPostsRef = firebase.database().ref('user-posts/' + myUserId).orderByChild('starCount');
   // [END my_top_posts_query]
   // [START recent_posts_query]
-  var recentPostsRef = firebase.database().ref('posts').limitToLast(100);
+  //var recentPostsRef = firebase.database().ref('posts').limitToLast(100);
   // [END recent_posts_query]
   var userPostsRef = firebase.database().ref('user-posts/' + myUserId);
 
@@ -288,13 +289,13 @@ function startDatabaseQueries() {
   };
 
   // Fetching and displaying all posts of each sections.
-  fetchPosts(topUserPostsRef, topUserPostsSection);
-  fetchPosts(recentPostsRef, recentPostsSection);
+ // fetchPosts(topUserPostsRef, topUserPostsSection);
+ // fetchPosts(recentPostsRef, recentPostsSection);
   fetchPosts(userPostsRef, userPostsSection);
 
   // Keep track of all Firebase refs we are listening to.
-  listeningFirebaseRefs.push(topUserPostsRef);
-  listeningFirebaseRefs.push(recentPostsRef);
+  //listeningFirebaseRefs.push(topUserPostsRef);
+  //listeningFirebaseRefs.push(recentPostsRef);
   listeningFirebaseRefs.push(userPostsRef);
 }
 
@@ -316,8 +317,8 @@ function writeUserData(userId, name, email, imageUrl) {
  */
 function cleanupUi() {
   // Remove all previously displayed posts.
-  topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
-  recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  //topUserPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
+  //recentPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
   userPostsSection.getElementsByClassName('posts-container')[0].innerHTML = '';
 
   // Stop all currently listening Firebase listeners.
@@ -378,13 +379,13 @@ function newPostForCurrentUser(title, text, login) {
  * Displays the given section element and changes styling of the given button.
  */
 function showSection(sectionElement, buttonElement) {
-  recentPostsSection.style.display = 'none';
+  //recentPostsSection.style.display = 'none';
   userPostsSection.style.display = 'none';
-  topUserPostsSection.style.display = 'none';
+  //topUserPostsSection.style.display = 'none';
   addPost.style.display = 'none';
 
   myPostsMenuButton.classList.remove('is-active');
-  myTopPostsMenuButton.classList.remove('is-active');
+  //myTopPostsMenuButton.classList.remove('is-active');
 
   if (sectionElement) {
     sectionElement.style.display = 'block';
@@ -431,9 +432,9 @@ window.addEventListener('load', function() {
   myPostsMenuButton.onclick = function() {
     showSection(userPostsSection, myPostsMenuButton);
   };
-  myTopPostsMenuButton.onclick = function() {
+  /*myTopPostsMenuButton.onclick = function() {
     showSection(topUserPostsSection, myTopPostsMenuButton);
-  };
+  };*/
   addButton.onclick = function() {
     showSection(addPost);
     messageInput.value = '';
@@ -456,4 +457,8 @@ function MaskPass(password) {
     text += "*";
   }
   return text;
+}
+function showhidepass(postId) {
+  $('#showpass-'+postId).toggle();
+  $('#hidepass-'+postId).toggle();
 }
