@@ -45,7 +45,6 @@ h3 {
 
 .mdl-textfield {
     width: 100%;
-    
 }
 
 
@@ -71,14 +70,10 @@ h3 {
 
 .mdl-textfield__label:after {
     background-color: #0288D1;
-    
-    
 }
 
 .mdl-textfield--floating-label.is-focused .mdl-textfield__label {
     color: #0288D1;
-    
-   
 }
 
 
@@ -145,11 +140,11 @@ h3 {
     display: inline-block;
     line-height: 38px;
     vertical-align: top;
-    width: calc(100% - 46px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
+    
 }
 
 #sign-in-button {
@@ -280,7 +275,6 @@ h3 {
 
 .comments-container .username {
     width: auto;
-    
 }
 
 .comments-container .loginname {
@@ -301,7 +295,6 @@ h3 {
 
 .comments-container .username {
     line-height: 25px;
-    
 }
 
 
@@ -316,7 +309,7 @@ h3 {
 
 .post .header {
     padding: 10px;
-    width: calc(100% - 100px);
+    width: 400px;
     display: inline-block;
 }
 
@@ -332,22 +325,23 @@ h3 {
 .post .comments-container {
     padding: 15px 10px 0 10px;
 }
+
 .post .text {
     padding: 0 10px;
     color: grey;
-    display:none;
+    display: none;
 }
+
 .post .loginname {
     padding: 0 10px;
     color: grey
 }
 
 .post .comments-container .text {
-   
     margin-left: 5px;
     color: #444;
     transition: all 0.2s;
-     padding: 50px;
+    padding: 50px;
 }
 
 .post .add-comment {
@@ -358,7 +352,6 @@ h3 {
 
 .post .add-comment.mdl-textfield {
     width: 100%;
-  
 }
 
 .post .star {
@@ -399,29 +392,42 @@ h3 {
     color: white;
     flex-direction: column;
 }
-.primary{
-    background-color: #303F9F;
 
+.primary {
+    background-color: #303F9F;
 }
-.logindetails{
-    padding:10px;
+
+.logindetails {
+    padding: 10px;
 }
-.navbar-color{
+
+.navbar-color {
     background-color: #8603e5;
 }
-a{
-    color:white;
+
+a {
+    color: white;
 }
-eyeball{
-    border:none;
-    padding:0px;
-    background:none;
+
+eyeball {
+    border: none;
+    padding: 0px;
+    background: none;
 }
-.post .hidden-pass{
+
+.post .hidden-pass {
     padding: 0 10px;
     color: grey;
 }
-.post .show-pass{
+
+.post .show-pass {
     padding: 0 10px;
     color: grey;
+}
+
+.align-btn {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 38px;
+    margin-left: 5px;
 }

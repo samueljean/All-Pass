@@ -32,6 +32,7 @@ var recentMenuButton = document.getElementById('menu-recent');
 var myPostsMenuButton = document.getElementById('menu-my-posts');
 //var myTopPostsMenuButton = document.getElementById('menu-my-top-posts');
 var listeningFirebaseRefs = [];
+var firebasePostRef;
 
 /**
  * Saves a new post to the Firebase DB.
@@ -102,7 +103,12 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
     '<div>' +
     '<div class="avatar"></div>' +
     '<div class="username mdl-color-text--black"></div>' +
-    '<button type="botton" class="btn btn-default btn-sm eyeball"> </button>' +
+    '<div class="align-btn trash">' +
+    '<button type="botton" class="btn btn-default btn-sm eyeball"> <span class="glyphicon glyphicon-trash"></span> </button>' +
+    '</div>' +
+    '<div class="align-btn edit-btn">' +
+    '<button type="botton" class="btn btn-default btn-sm eyeball"> <span class="glyphicon glyphicon-pencil"></span> </button>' +
+    '</div>' +
     '</div>' +
     '</div>' +
     '<span class="star">' +
@@ -113,7 +119,7 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
     '<div class="logindetails">' +
     '<div class="">login</div>' +
     '<div class="loginname"></div> ' +
-    '<div class="">password <button type="button" class="btn btn-default btn-sm eyeball" onclick="showhidepass('+"'"+postId+"'"+')"> <span class="glyphicon glyphicon-eye-open"></span> </button></div>' +
+    '<div class="">password <button type="button" class="btn btn-default btn-sm eyeball" onclick="showhidepass(' + "'" + postId + "'" + ')"> <span class="glyphicon glyphicon-eye-open"></span> </button></div>' +
     '<div class="text" id="showpass-' + postId + '"></div>' +
     '<div class="hidden-pass" id="hidepass-' + postId + '"></div>' +
     '</div>' +
@@ -130,6 +136,7 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
   var commentInput = postElement.getElementsByClassName('new-comment')[0];
   var star = postElement.getElementsByClassName('starred')[0];
   var unStar = postElement.getElementsByClassName('not-starred')[0];
+  var trash = postElement.getElementsByClassName('trash')[0];
 
   // Set values.
   postElement.getElementsByClassName('text')[0].innerText = text; //This is the password
@@ -183,8 +190,17 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
     toggleStar(globalPostRef, uid);
     toggleStar(userPostRef, uid);
   };
+  var onTrashClicked = function() {
+    var globalPostRef = firebase.database().ref('/posts/' + postId);
+    var userPostRef = firebase.database().ref('/user-posts/' + authorId + '/' + postId);
+    console.log("in onTrashClicked ;" + postId);
+    var containerElement = document.getElementsByClassName('posts-container')[0];
+    var post = containerElement.getElementsByClassName('post-' + postId)[0];
+    post.parentElement.removeChild(post);
+  };
   unStar.onclick = onStarClicked;
   star.onclick = onStarClicked;
+  trash.onclick = onTrashClicked;
 
   return postElement;
 }
@@ -258,13 +274,14 @@ function deleteComment(postElement, id) {
 function startDatabaseQueries() {
   // [START my_top_posts_query]
   var myUserId = firebase.auth().currentUser.uid;
- // var topUserPostsRef = firebase.database().ref('user-posts/' + myUserId).orderByChild('starCount');
+  // var topUserPostsRef = firebase.database().ref('user-posts/' + myUserId).orderByChild('starCount');
   // [END my_top_posts_query]
   // [START recent_posts_query]
   //var recentPostsRef = firebase.database().ref('posts').limitToLast(100);
   // [END recent_posts_query]
+  // ref-firebase
   var userPostsRef = firebase.database().ref('user-posts/' + myUserId);
-
+ // firebasePostRefs = userPostsRef;
   var fetchPosts = function(postsRef, sectionElement) {
     postsRef.on('child_added', function(data) {
       var author = data.val().author || 'Anonymous';
@@ -273,7 +290,9 @@ function startDatabaseQueries() {
         createPostElement(data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic, data.val().loginname),
         containerElement.firstChild);
     });
+    //Saveme-look here for edit function 05/10
     postsRef.on('child_changed', function(data) {
+      console.log("im in childchange");
       var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
       var postElement = containerElement.getElementsByClassName('post-' + data.key)[0];
       postElement.getElementsByClassName('mdl-card__title-text')[0].innerHTML = '<a href="' + addhttp(data.val().title) + '" target="_blank">' + data.val().title + '</a>';
@@ -282,15 +301,16 @@ function startDatabaseQueries() {
       postElement.getElementsByClassName('star-count')[0].innerText = data.val().starCount;
     });
     postsRef.on('child_removed', function(data) {
-      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
+      console.log("im in childremove");
+      var containerElement = sectionElement.getElementsByClassNames('posts-container')[0];
       var post = containerElement.getElementsByClassName('post-' + data.key)[0];
       post.parentElement.removeChild(post);
     });
   };
 
   // Fetching and displaying all posts of each sections.
- // fetchPosts(topUserPostsRef, topUserPostsSection);
- // fetchPosts(recentPostsRef, recentPostsSection);
+  // fetchPosts(topUserPostsRef, topUserPostsSection);
+  // fetchPosts(recentPostsRef, recentPostsSection);
   fetchPosts(userPostsRef, userPostsSection);
 
   // Keep track of all Firebase refs we are listening to.
@@ -452,13 +472,15 @@ function addhttp(url) {
 }
 
 function MaskPass(password) {
-  var text= "";
-  for ( var i = 0; i < password.length; i++) {
+  var text = "";
+  for (var i = 0; i < password.length; i++) {
     text += "*";
   }
   return text;
 }
+
 function showhidepass(postId) {
-  $('#showpass-'+postId).toggle();
-  $('#hidepass-'+postId).toggle();
+  $('#showpass-' + postId).toggle();
+  $('#hidepass-' + postId).toggle();
 }
+//width: calc(100% - 46px);
