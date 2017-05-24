@@ -193,10 +193,12 @@ function createPostElement(postId, title, text, author, authorId, authorPic, log
   var onTrashClicked = function() {
     var globalPostRef = firebase.database().ref('/posts/' + postId);
     var userPostRef = firebase.database().ref('/user-posts/' + authorId + '/' + postId);
+    globalPostRef.remove();
+    userPostRef.remove();
     console.log("in onTrashClicked ;" + postId);
     var containerElement = document.getElementsByClassName('posts-container')[0];
     var post = containerElement.getElementsByClassName('post-' + postId)[0];
-    post.parentElement.removeChild(post);
+    //post.parentElement.removeChild(post);
   };
   unStar.onclick = onStarClicked;
   star.onclick = onStarClicked;
@@ -281,7 +283,7 @@ function startDatabaseQueries() {
   // [END recent_posts_query]
   // ref-firebase
   var userPostsRef = firebase.database().ref('user-posts/' + myUserId);
- // firebasePostRefs = userPostsRef;
+  // firebasePostRefs = userPostsRef;
   var fetchPosts = function(postsRef, sectionElement) {
     postsRef.on('child_added', function(data) {
       var author = data.val().author || 'Anonymous';
@@ -302,7 +304,7 @@ function startDatabaseQueries() {
     });
     postsRef.on('child_removed', function(data) {
       console.log("im in childremove");
-      var containerElement = sectionElement.getElementsByClassNames('posts-container')[0];
+      var containerElement = sectionElement.getElementsByClassName('posts-container')[0];
       var post = containerElement.getElementsByClassName('post-' + data.key)[0];
       post.parentElement.removeChild(post);
     });
